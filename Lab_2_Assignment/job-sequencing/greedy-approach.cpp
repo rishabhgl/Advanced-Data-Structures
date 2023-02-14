@@ -68,7 +68,7 @@ int main()
             }
         index++;
     }
-    for (int i = 0; i < maxDeadline; i++)
+    for (int i = 0; i < count; i++)
     {
         seq[i].get();
     }

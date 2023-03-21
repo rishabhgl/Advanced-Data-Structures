@@ -7,6 +7,23 @@ struct node
     int sol;
 };
 
+void printLCS(node **lcs, int i, int j, char *seq)
+{
+    if (lcs[i][j].sol == 0)
+        exit(0);
+    if (lcs[i][j].sub == 0)
+    {
+        cout << seq[i] << ' ';
+        printLCS(lcs, i - 1, j - 1, seq);
+    }
+    else if(lcs[i][j].sub == 1){
+        printLCS(lcs,i-1,j,seq);
+    }
+    else{
+        printLCS(lcs,i,j-1,seq);
+    }
+}
+
 int main()
 {
     int size1, size2;
@@ -26,15 +43,19 @@ int main()
     {
         cin >> seq2[i];
     }
-    node lcs[size1 + 1][size2 + 2];
+    node ** lcs = new node*[size1+1];
+    for (int i = 0; i <= size2 ; i++)
+    {
+        lcs[i] = new node[size2 + 1];
+    }
     for (int i = 0; i <= size1; i++)
     {
-        //First sequence as rows
+        // First sequence as rows
         lcs[i][0].sol = 0;
     }
     for (int i = 0; i <= size2; i++)
     {
-        //Second sequence as columns
+        // Second sequence as columns
         lcs[0][i].sol = 0;
     }
 
@@ -42,21 +63,29 @@ int main()
     {
         for (int j = 1; j <= size2; j++)
         {
-            if (seq1[i] == seq2[j]){
-                lcs[i][j].sol = 1 + lcs[i-1][j-1].sol;
+            if (seq1[i] == seq2[j])
+            {
+                lcs[i][j].sol = 1 + lcs[i - 1][j - 1].sol;
                 lcs[i][j].sub = 0;
             }
-            else if (lcs[i-1][j].sol >= lcs[i][j-1].sol)
+            else if (lcs[i - 1][j].sol >= lcs[i][j - 1].sol)
             {
-                lcs[i][j].sol = lcs[i-1][j].sol;
+                lcs[i][j].sol = lcs[i - 1][j].sol;
                 lcs[i][j].sub = 1;
             }
-            else{
-                lcs[i][j].sol = lcs[i][j-1].sol;
+            else
+            {
+                lcs[i][j].sol = lcs[i][j - 1].sol;
                 lcs[i][j].sub = 2;
             }
         }
     }
+
+    cout << "The length of the longest common sequence is: " << lcs[size1][size2].sol << endl;
+    cout << "The longest common subsequence is reversed is: " << endl;
+    printLCS(lcs,size1,size2,seq1);
+    return 0;
+}
     // for (int i = 0; i <= size1; i++)
     // {
     //     for (int j = 0; j <= size2; j++)
@@ -65,7 +94,3 @@ int main()
     //     }
     //     cout << endl;
     // }
-    
-    cout << "The length of the longest common sequence is: " << lcs[size1][size2].sol << endl;
-    return 0;
-}
